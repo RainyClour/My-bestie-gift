@@ -3,121 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For My Bestie ✨</title>
+    <title>Lucky Gift for Bestie 🍀</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #ff85a2;
-            --bg-color: #fff0f3;
+            --primary-green: #4CAF50;
+            --bg-color: #e8f5e9; /* Màu xanh lá cực nhạt */
+            --card-bg: #ffffff;
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
             background-color: var(--bg-color);
             margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* --- Màn hình khóa (Ý tưởng 2) --- */
+        /* Hiệu ứng cỏ may mắn bay */
+        .clover {
+            position: fixed;
+            top: -50px;
+            font-size: 24px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 9999;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh) rotate(360deg);
+            }
+        }
+
+        /* --- Màn hình khóa --- */
         #lock-screen {
             text-align: center;
-            transition: all 0.5s ease;
+            z-index: 10;
         }
 
         .quiz-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(255, 133, 162, 0.2);
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(76, 175, 80, 0.2);
+            border: 2px solid #c8e6c9;
         }
 
         input {
-            padding: 10px;
-            border: 2px solid var(--primary-color);
-            border-radius: 10px;
-            outline: none;
+            padding: 12px;
+            border: 2px solid var(--primary-green);
+            border-radius: 12px;
             width: 80%;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 16px;
         }
 
         button {
-            background: var(--primary-color);
+            background: var(--primary-green);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 12px 25px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
+            transition: transform 0.2s;
         }
 
-        /* --- Dashboard (Ý tưởng 3) --- */
+        button:hover { transform: scale(1.05); }
+
+        /* --- Dashboard --- */
         #dashboard {
-            display: none; /* Ẩn lúc đầu */
+            display: none;
             width: 90%;
-            max-width: 800px;
-            animation: fadeIn 1s ease;
+            max-width: 850px;
+            padding: 20px;
+            animation: fadeIn 1.2s ease;
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
 
         .card {
             background: white;
             padding: 1.5rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-bottom: 4px solid var(--primary-green);
         }
 
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary-color); }
+        h1 { font-family: 'Dancing Script', cursive; color: var(--primary-green); font-size: 2.5rem; }
+        h3 { color: #2e7d32; margin-top: 0; }
 
-        /* Form gửi mail */
-        form { display: flex; flex-direction: column; }
-        textarea { padding: 10px; border-radius: 10px; border: 1px solid #ddd; resize: none; margin-bottom: 10px; }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="lock-screen">
         <div class="quiz-card">
-            <h1>Giải mã để mở quà nhé! 🎁</h1>
-            <p>Món tụi mình hay ăn nhất là gì? (Viết không dấu)</p>
-            <input type="text" id="answer" placeholder="Gợi ý: trà sữa, bánh tráng...">
+            <h1>Mật mã cỏ may mắn 🍀</h1>
+            <p>Nhập mật mã để nhận bất ngờ nè!</p>
+            <input type="text" id="answer" placeholder="Gợi ý: Món tủ của 2 đứa...">
             <br>
-            <button onclick="unlock()">Mở Khóa</button>
+            <button onclick="unlock()">Khám Phá Ngay</button>
         </div>
     </div>
 
     <div id="dashboard">
-        <center><h1>Chào mừng "Nhỏ Bạn Thân" của Phuong! 💖</h1></center>
+        <center><h1>Gửi Nhỏ Bạn Thân Của Tui ✨</h1></center>
         
         <div class="grid">
             <div class="card">
-                <h3>📊 Chỉ số tình bạn</h3>
-                <p>❤️ Mức độ thân thiết: 1000%</p>
-                <p>🥤 Lượng trà sữa đã tiêu thụ: ∞ lít</p>
-                <p>👭 Trạng thái: Mãi là anh em!</p>
+                <h3>🍀 Lời Chúc May Mắn</h3>
+                <p>Mong là mỗi khi bà nhìn thấy những chiếc cỏ 4 lá này, mọi điều tốt lành sẽ đến với bà nha!</p>
             </div>
 
             <div class="card">
-                <h3>🎵 Nhạc dành cho bà</h3>
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/3v8X77VpS26Lz3A6zO8n9n?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+                <h3>🎵 Giai điệu cho bạn</h3>
+                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7qiZ3oTQum7v3vNE9v9IuS" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
             </div>
 
-            <div class="card" style="grid-column: span 1;">
-                <h3>📩 Gửi lời nhắn cho Uii</h3>
+            <div class="card" style="grid-column: 1 / -1;">
+                <h3>📩 Gửi lời nhắn lại cho tui</h3>
                 <form action="https://formspree.io/f/rainmy2000@gmail.com" method="POST">
-                    <textarea name="message" rows="4" placeholder="Viết gì đó cho tui đi..." required></textarea>
-                    <button type="submit">Gửi ngay!</button>
+                    <textarea name="message" rows="3" placeholder="Viết gì đó bí mật vào đây..." required></textarea>
+                    <button type="submit" style="width: 100%;">Gửi cho Phuong</button>
                 </form>
             </div>
         </div>
@@ -126,25 +153,38 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     
     <script>
+        // Hàm tạo cỏ bay
+        function createClover() {
+            const clover = document.createElement('div');
+            clover.classList.add('clover');
+            clover.innerText = '🍀';
+            clover.style.left = Math.random() * 100 + 'vw';
+            clover.style.animationDuration = Math.random() * 3 + 2 + 's'; // Rơi từ 2-5 giây
+            clover.style.opacity = Math.random();
+            document.body.appendChild(clover);
+
+            setTimeout(() => {
+                clover.remove();
+            }, 5000);
+        }
+
+        // Cứ 300ms tạo 1 cỏ mới
+        setInterval(createClover, 300);
+
         function unlock() {
             const ans = document.getElementById('answer').value.toLowerCase().trim();
-            
-            // Đặt đáp án là 'tra sua' (hoặc bất cứ thứ gì cậu muốn)
-            if (ans === "tra sua" || ans === "banh trang") {
-                // Hiệu ứng pháo hoa
+            // Cậu có thể sửa 'hi' thành mật mã thật của 2 đứa nhé
+            if (ans !== "") { 
                 confetti({
-                    particleCount: 150,
+                    particleCount: 100,
                     spread: 70,
-                    origin: { y: 0.6 }
+                    colors: ['#4CAF50', '#81C784', '#ffffff']
                 });
 
-                // Chuyển màn hình
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
-                }, 1000);
-            } else {
-                alert("Hic, sai rùi! Nghĩ lại xem nè nhỏ bạn.");
+                }, 800);
             }
         }
     </script>
