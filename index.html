@@ -8,46 +8,47 @@
     <style>
         :root {
             --primary-green: #4CAF50;
-            --bg-color: #e8f5e9; /* Màu xanh lá cực nhạt */
-            --card-bg: #ffffff;
+            --moss-green: #4a6741;
+            --light-moss: #5d8252;
+            --bg-color: #e8f5e9;
+            --glow: #7fff00;
         }
 
         body {
             font-family: 'Quicksand', sans-serif;
             background-color: var(--bg-color);
             margin: 0;
-            overflow-x: hidden;
+            overflow: hidden;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Hiệu ứng cỏ may mắn bay */
-        .clover {
+        /* --- Cỏ bay nền --- */
+        .clover-rain {
             position: fixed;
             top: -50px;
             font-size: 24px;
             user-select: none;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 1;
             animation: fall linear forwards;
         }
 
         @keyframes fall {
-            to {
-                transform: translateY(105vh) rotate(360deg);
-            }
+            to { transform: translateY(105vh) rotate(360deg); }
         }
 
         /* --- Màn hình khóa --- */
         #lock-screen {
             text-align: center;
-            z-index: 10;
+            z-index: 100;
+            transition: 0.8s;
         }
 
         .quiz-card {
-            background: var(--card-bg);
+            background: white;
             padding: 2.5rem;
             border-radius: 25px;
             box-shadow: 0 15px 35px rgba(76, 175, 80, 0.2);
@@ -61,6 +62,7 @@
             width: 80%;
             margin-bottom: 20px;
             font-size: 16px;
+            outline: none;
         }
 
         button {
@@ -71,47 +73,76 @@
             border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: transform 0.2s;
+            transition: 0.3s;
         }
 
-        button:hover { transform: scale(1.05); }
+        /* --- Khu vực Hộp Quà (Ẩn lúc đầu) --- */
+        #gift-scene {
+            display: none;
+            position: relative;
+            perspective: 1000px;
+            z-index: 50;
+            cursor: pointer;
+        }
 
-        /* --- Dashboard --- */
+        .box-body {
+            width: 160px;
+            height: 120px;
+            background: var(--moss-green);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .box-lid {
+            position: absolute;
+            width: 170px;
+            height: 40px;
+            background: var(--light-moss);
+            top: -35px;
+            left: -5px;
+            border-radius: 10px;
+            transform-origin: left bottom;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 2;
+        }
+
+        .open .box-lid {
+            transform: rotateX(40deg) rotateZ(-110deg) translate(-20px, -40px);
+        }
+
+        .lucky-clover-inside {
+            position: absolute;
+            font-size: 60px;
+            left: 50px;
+            top: 20px;
+            opacity: 0;
+            transition: 1s ease-out;
+            filter: drop-shadow(0 0 15px var(--glow));
+        }
+
+        .open .lucky-clover-inside {
+            opacity: 1;
+            transform: translateY(-150px) scale(2);
+        }
+
+        /* --- Dashboard (Ẩn lúc đầu) --- */
         #dashboard {
             display: none;
             width: 90%;
-            max-width: 850px;
-            padding: 20px;
-            animation: fadeIn 1.2s ease;
+            max-width: 800px;
+            z-index: 10;
+            animation: fadeIn 1s ease;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .card { background: white; padding: 1.5rem; border-radius: 20px; border-bottom: 4px solid var(--primary-green); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        h1 { font-family: 'Dancing Script', cursive; color: var(--primary-green); text-align: center; }
 
-        .card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            border-bottom: 4px solid var(--primary-green);
-        }
-
-        h1 { font-family: 'Dancing Script', cursive; color: var(--primary-green); font-size: 2.5rem; }
-        h3 { color: #2e7d32; margin-top: 0; }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -120,74 +151,88 @@
         <div class="quiz-card">
             <h1>Mật mã cỏ may mắn 🍀</h1>
             <p>Nhập mật mã để nhận bất ngờ nè!</p>
-            <input type="text" id="answer" placeholder="Gợi ý: Món tủ của 2 đứa...">
+            <input type="text" id="password" placeholder="Gợi ý: Món tủ của 2 đứa...">
             <br>
-            <button onclick="unlock()">Khám Phá Ngay</button>
+            <button onclick="checkPassword()">Khám Phá Ngay</button>
         </div>
     </div>
 
+    <div id="gift-scene" onclick="openBox()">
+        <div class="lucky-clover-inside">🍀</div>
+        <div class="box-lid"></div>
+        <div class="box-body"></div>
+        <p style="text-align:center; color: var(--moss-green); font-weight:bold; margin-top:20px;">Chạm để mở quà!</p>
+    </div>
+
     <div id="dashboard">
-        <center><h1>Gửi Nhỏ Bạn Thân Của Tui ✨</h1></center>
-        
+        <h1>Gửi Nhỏ Bạn Thân ✨</h1>
         <div class="grid">
             <div class="card">
                 <h3>🍀 Lời Chúc May Mắn</h3>
                 <p>Mong là mỗi khi bà nhìn thấy những chiếc cỏ 4 lá này, mọi điều tốt lành sẽ đến với bà nha!</p>
             </div>
-
             <div class="card">
                 <h3>🎵 Giai điệu cho bạn</h3>
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/7qiZ3oTQum7v3vNE9v9IuS" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+                <div style="background: #f0f0f0; height: 80px; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+                    [Chèn link nhạc của cậu vào đây nhé 🎵]
+                </div>
             </div>
-
             <div class="card" style="grid-column: 1 / -1;">
                 <h3>📩 Gửi lời nhắn lại cho tui</h3>
-                <form action="https://formspree.io/f/rainmy2000@gmail.com" method="POST">
-                    <textarea name="message" rows="3" placeholder="Viết gì đó bí mật vào đây..." required></textarea>
-                    <button type="submit" style="width: 100%;">Gửi cho Phuong</button>
-                </form>
+                <textarea id="msg" rows="3" style="width:100%; border-radius:10px; padding:10px; margin-bottom:10px;" placeholder="Viết gì đó bí mật..."></textarea>
+                <button style="width:100%">Gửi cho Phuong</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    
     <script>
-        // Hàm tạo cỏ bay
-        function createClover() {
-            const clover = document.createElement('div');
-            clover.classList.add('clover');
-            clover.innerText = '🍀';
-            clover.style.left = Math.random() * 100 + 'vw';
-            clover.style.animationDuration = Math.random() * 3 + 2 + 's'; // Rơi từ 2-5 giây
-            clover.style.opacity = Math.random();
-            document.body.appendChild(clover);
+        // Tạo mưa cỏ 4 lá
+        setInterval(() => {
+            const c = document.createElement('div');
+            c.classList.add('clover-rain');
+            c.innerText = '🍀';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.animationDuration = Math.random() * 3 + 2 + 's';
+            c.style.opacity = Math.random();
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 5000);
+        }, 300);
 
-            setTimeout(() => {
-                clover.remove();
-            }, 5000);
+        // Bước 1: Kiểm tra mật mã
+        function checkPassword() {
+            const pass = document.getElementById('password').value.trim();
+            if (pass !== "") {
+                confetti({ particleCount: 50, spread: 60, colors: ['#4CAF50'] });
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('gift-scene').style.display = 'block';
+            }
         }
 
-        // Cứ 300ms tạo 1 cỏ mới
-        setInterval(createClover, 300);
+        // Bước 2: Mở hộp quà
+        function openBox() {
+            const scene = document.getElementById('gift-scene');
+            scene.classList.add('open');
+            
+            // Bắn pháo hoa rực rỡ khi mở hộp
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#7fff00', '#ffffff', '#4CAF50']
+            });
 
-        function unlock() {
-            const ans = document.getElementById('answer').value.toLowerCase().trim();
-            // Cậu có thể sửa 'hi' thành mật mã thật của 2 đứa nhé
-            if (ans !== "hi") { 
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    colors: ['#4CAF50', '#81C784', '#ffffff']
-                });
-
+            // Bước 3: Hiện Dashboard sau khi mở hộp 1.5 giây
+            setTimeout(() => {
+                scene.style.opacity = '0';
+                scene.style.transition = '0.5s';
                 setTimeout(() => {
-                    document.getElementById('lock-screen').style.display = 'none';
+                    scene.style.display = 'none';
                     document.getElementById('dashboard').style.display = 'block';
-                }, 800);
-            }
+                    document.body.style.overflowY = 'auto'; // Cho phép cuộn trang
+                }, 500);
+            }, 2000);
         }
     </script>
 </body>
 </html>
-
